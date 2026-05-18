@@ -82,7 +82,7 @@ class DataConfig:
     # ── размерности ───────────────────────────────────
     num_classes:      int = 10     # len(threat_classes)
     node_feature_dim: int = 128    # размерность вектора узла графа
-    num_samples:      int = 2000   # всего инцидентов в датасете
+    num_samples:      int = 5000   # всего инцидентов в датасете
 
     # ── сплит ─────────────────────────────────────────
     train_ratio: float = 0.70
@@ -131,8 +131,8 @@ class ModelConfig:
     num_gat_layers: int   = 3      # глубина GAT (рецептивное поле = 3-hop)
     hidden_dim:     int   = 256    # размерность скрытых состояний
     num_heads:      int   = 8      # количество голов внимания (multi-head)
-    dropout:        float = 0.30   # dropout в GAT и MLP
-    edge_dropout:   float = 0.10   # DropEdge (рандомное удаление рёбер)
+    dropout:        float = 0.40   # dropout в GAT и MLP
+    edge_dropout:   float = 0.15   # DropEdge (рандомное удаление рёбер)
 
     # ── нормализация ──────────────────────────────────
     norm_type:    str  = "layer"   # "layer" | "batch"
@@ -168,8 +168,8 @@ class TrainConfig:
 
     # ── оптимизатор ───────────────────────────────────
     optimizer:     str   = "adamw"   # "adam" | "adamw" | "sgd"
-    learning_rate: float = 3e-4
-    weight_decay:  float = 1e-4      # L2 регуляризация
+    learning_rate: float = 2e-4
+    weight_decay:  float = 3e-4      # L2 регуляризация
     grad_clip:     float = 1.0       # gradient clipping (max norm)
 
     # ── scheduler ─────────────────────────────────────
@@ -181,11 +181,11 @@ class TrainConfig:
     use_amp: bool = True            # torch.cuda.amp.GradScaler
 
     # ── early stopping ────────────────────────────────
-    early_stopping_patience: int   = 20
+    early_stopping_patience: int   = 40
     early_stopping_delta:    float = 1e-4   # мин. улучшение val_loss
 
     # ── loss function ─────────────────────────────────
-    label_smoothing:  float = 0.10   # сглаживание меток (anti-overfit)
+    label_smoothing:  float = 0.15   # сглаживание меток (anti-overfit)
     use_class_weights: bool = True   # взвешенный CE для дисбаланса
 
     # ── логирование и чекпоинты ───────────────────────

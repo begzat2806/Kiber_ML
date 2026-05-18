@@ -1,0 +1,56 @@
+# ═══════════════════════════════════════════════════════════
+# CyberThreat Intelligence AI — Requirements
+# ═══════════════════════════════════════════════════════════
+#
+# Установка:
+#   pip install -r requirements.txt
+#
+# Для GPU (CUDA 12.x):
+#   pip install torch --index-url https://download.pytorch.org/whl/cu121
+#
+# Для CPU или Apple Silicon (MPS):
+#   pip install torch  (обычный pip, PyTorch выберет нужную сборку)
+#
+# ═══════════════════════════════════════════════════════════
+
+# ── Ядро ────────────────────────────────────────────────────
+torch>=2.2.0
+numpy>=1.24.0
+
+# ── Визуализация ────────────────────────────────────────────
+matplotlib>=3.7.0
+seaborn>=0.12.0
+pandas>=2.0.0          # для plot_training_curves (чтение CSV)
+
+# ── NLP / Embeddings (опционально, для реальных BERT-эмбеддингов) ──
+# transformers>=4.38.0  # Hugging Face BERT (раскомментируй если нужно)
+# tokenizers>=0.15.0
+
+# ── Graph Neural Networks (опционально, альтернатива ручному GAT) ──
+# torch-geometric>=2.5.0   # pip install torch-geometric
+# torch-scatter>=2.1.2     # зависимость torch-geometric
+# torch-sparse>=0.6.18     # зависимость torch-geometric
+
+# ── REST API (опционально, для inference.py FastAPI) ──────────
+# fastapi>=0.110.0
+# uvicorn[standard]>=0.27.0
+# pydantic>=2.0.0
+
+# ── ML утилиты (опционально) ──────────────────────────────────
+# scikit-learn>=1.4.0      # для StratifiedShuffleSplit, калибровки
+# joblib>=1.3.0            # для сохранения скейлеров
+
+# ── Эксперименты / логирование (опционально) ──────────────────
+# wandb>=0.16.0            # Weights & Biases
+# tensorboard>=2.15.0      # TensorBoard
+# mlflow>=2.10.0           # MLflow
+
+# ── ONNX экспорт (опционально) ────────────────────────────────
+# onnx>=1.15.0
+# onnxruntime>=1.17.0
+
+# ── Разработка / тесты ────────────────────────────────────────
+# pytest>=7.4.0
+# black>=24.0.0            # форматтер
+# flake8>=7.0.0            # линтер
+# mypy>=1.8.0              # type checker

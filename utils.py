@@ -53,34 +53,40 @@ logger = logging.getLogger(__name__)
 
 def setup_logging(log_level: str = "INFO",
                   log_to_file: bool = True) -> logging.Logger:
-    """
-    Настраивает логирование: консоль + ротируемый файл.
+    import sys
 
-    Вызов в main.py — самая первая строка:
-        logger = setup_logging()
-
-    Формат: [2025-01-15 14:32:01] INFO    train.py:87 — Epoch 5/150 ...
-    """
     os.makedirs(PATHS["logs_dir"], exist_ok=True)
 
-    fmt     = logging.Formatter(
-        "[%(asctime)s] %(levelname)-8s %(filename)s:%(lineno)d — %(message)s",
+    fmt  = logging.Formatter(
+        "[%(asctime)s] %(levelname)-8s %(filename)s:%(lineno)d - %(message)s",
         datefmt="%Y-%m-%d %H:%M:%S",
     )
-    root    = logging.getLogger()
+    root = logging.getLogger()
     root.setLevel(getattr(logging, log_level.upper(), logging.INFO))
 
-    # Консоль
-    sh = logging.StreamHandler()
+    # Консоль — принудительно UTF-8 на Windows
+    if sys.platform == "win32":
+        import io
+        stream = io.TextIOWrapper(
+            sys.stdout.buffer,
+            encoding="utf-8",
+            errors="replace",
+            line_buffering=True,
+        )
+    else:
+        stream = sys.stdout
+
+    sh = logging.StreamHandler(stream)
     sh.setFormatter(fmt)
     root.addHandler(sh)
 
-    # Файл с ротацией (макс 10 MB, 3 backup-файла)
+    # Файл — всегда UTF-8
     if log_to_file:
         fh = logging.handlers.RotatingFileHandler(
             PATHS["train_log"],
             maxBytes=10 * 1024 * 1024,
             backupCount=3,
+            encoding="utf-8",      # <- явно UTF-8
         )
         fh.setFormatter(fmt)
         root.addHandler(fh)
@@ -354,7 +360,7 @@ class CheckpointManager:
         path  = os.path.join(self.ckpt_dir, f"checkpoint_epoch_{epoch:04d}.pt")
         state = self._build_state(model, optimizer, scheduler, epoch, metrics)
         torch.save(state, path)
-        logger.info("Checkpoint saved → %s", path)
+        logger.info("Checkpoint saved -> %s", path)
 
     def load(self,
              model:     nn.Module,
@@ -523,7 +529,7 @@ def plot_training_curves(metrics_csv: str = None,
     out_path = os.path.join(save_dir, "training_curves.png")
     plt.savefig(out_path, dpi=150, bbox_inches="tight")
     plt.close()
-    logger.info("Training curves → %s", out_path)
+    logger.info("Training curves -> %s", out_path)
 
 
 def plot_confusion_matrix(cm:          torch.Tensor,
@@ -584,7 +590,7 @@ def plot_confusion_matrix(cm:          torch.Tensor,
     out_path = os.path.join(save_dir, "confusion_matrix.png")
     plt.savefig(out_path, dpi=150, bbox_inches="tight")
     plt.close()
-    logger.info("Confusion matrix → %s", out_path)
+    logger.info("Confusion matrix -> %s", out_path)
 
 
 def plot_semantic_heatmap(sim_matrix:  torch.Tensor,
@@ -636,7 +642,7 @@ def plot_semantic_heatmap(sim_matrix:  torch.Tensor,
     out_path = os.path.join(save_dir, "semantic_heatmap.png")
     plt.savefig(out_path, dpi=150, bbox_inches="tight")
     plt.close()
-    logger.info("Semantic heatmap → %s", out_path)
+    logger.info("Semantic heatmap -> %s", out_path)
 
 
 # ══════════════════════════════════════════════════════════════

@@ -307,7 +307,7 @@ class ThreatDataGenerator:
 
             for _ in range(n_cls):
                 # Разный уровень шума — некоторые атаки "чище" других
-                sigma  = 0.15 + 0.15 * random.random()
+                sigma  = 0.12 + 0.10 * random.random()
                 sample = proto + sigma * torch.randn_like(proto)
                 samples.append(sample)
                 labels.append(cls_idx)
@@ -598,7 +598,7 @@ def save_graph_data(graph_data: Dict, path: str = None) -> None:
     path = path or PATHS["graph_data"]
     os.makedirs(os.path.dirname(path), exist_ok=True)
     torch.save(graph_data, path)
-    logger.info("Graph data saved → %s", path)
+    logger.info("Graph data saved -> %s", path)
 
 
 def load_graph_data(path: str = None) -> Dict:
